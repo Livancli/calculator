@@ -45,23 +45,99 @@ clearEntry(){
 
 }
 
+
+getLastOperation(){
+
+        return this._operation[this._operation.length-1];
+}
+
+
+setLastOperation(value){
+
+    this._operation[this._operation.length-1] = value;
+
+}
+
+
+isOperator(value){
+
+        return (['+', '-', '*', '%', '/'].indexOf(value) > -1);
+
+    }
+
+
+    pushOperation(value){
+
+        this._operation.push(value);
+
+        if (this._operation.length > 3) {
+
+            this.calc();
+
+        }
+    }
+
+    calc(){
+
+        let last = this._operation.pop()
+
+        let result = eval(this._operation.join(""));
+
+        this._operation = [result, last];
+    }
+
+    
+    setLastNumberToDisplay(){
+
+        
+
+    }
+
 addOperation(value){
 
-    this._operation.push(value);
+    if (isNaN(this.getLastOperation())) {
 
-    console.log(this._operation);
+        if (this.isOperator(value)) {
+            
+            this.setLastOperation(value);
+
+        }else if(isNaN(value)) {
+
+            console.log('Outra coisa', value);
+
+        }else {
+
+                this.pushOperation(value);
+            }
+               
+
+    } else {
+
+        if (this.isOperator(value)) {
+
+                this.pushOperation(value);
+
+        } else {
+
+            let newValue = this.getLastOperation().toString() + value.toString();
+            this.setLastOperation(parseInt(newValue));
+
+            this.setLastNumberToDisplay();
+        }
+
+    }
 
 }
 
 setError(){
 
-    this.displayCalc = "error";
+    this.displayCalc = "Error";
 }
 
 
 
     execBtn(value){
-        
+
         switch (value){
 
             case 'ac':
@@ -73,27 +149,31 @@ setError(){
             break;
 
             case 'soma':
-
+                this.addOperation('+');
                 break;
 
-            case 'subtração':
-
+            case 'subtracao':
+                this.addOperation('-');
                 break;
 
-            case 'divisão':
-
+            case 'divisao':
+                this.addOperation('/');
                 break;
 
-            case 'multiplicação':
-
+            case 'multiplicacao':
+                this.addOperation('*');
                 break;
 
             case 'porcento':
-
+                this.addOperation('%');
                 break;
 
             case 'igual':
 
+                break;
+
+            case 'ponto':
+                this.addOperation('.');
                 break;
 
                 case '0':
